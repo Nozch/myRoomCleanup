@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + TS</title>
+  </head>
+  <body>
+    <div id="app">
+
+    </div>
+      <div class="container">
+      <nav class="sidebar">
+        <h1 class="logo">My Room Cleanup</h1>
+        <ul class="menu">
+          <li><button class="menu-item" data-view="calendar">カレンダー</button></li>
+          <li><button class="menu-item" data-view="wiki">ゴミ出しWiki</button></li>
+          <li><button class="menu-item" data-view="add-trash">ゴミを追加</button></li>
+          <li><button class="menu-item" data-view="trash-history">履歴</button></li>
+        </ul>
+      </nav>      
+        <main class="main-content">
+        <div id="calendar-view" class="view" style="display: none;">
+          <h2>ゴミ出しカレンダー</h2>
+          <div id="calendar-grid" class="calendar-grid"></div>
+        </div>
+        <div id="wiki-view" class="view" style="display: none;">
+          <h2>ゴミ出しWiki</h2>
+          <p>Wiki内容を表示（仮）</p>
+        </div>
+        <div id="add-trash-view" class="view form-container" style="display: none;">
+
+          <h2>ゴミを追加</h2>
+          <form id="add-trash-form">
+          <label>
+            <span class="field-label">▶︎ ゴミの種類</span>
+            <select id="trash-type" name="trashType">
+            </select>
+          </label>
+
+          <br />
+
+          <label>
+            <span class="field-label">▶︎ ゴミ名</span>
+            <input type="text" name="trashName" id="trash-name" />
+          </label>
+
+          <br />
+
+          <label>
+            <span class="field-label">▶︎ 備考</span> 
+            <input type="text" name="trashNote" id="trash-note" />
+          </label>
+          <button type="submit">登録</button>
+          </form>
+        </div>
+        <div id="trash-history-view" class="view" style="display: none;"></div>
+      </main>
+    </div>
+
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
