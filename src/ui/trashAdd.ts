@@ -1,14 +1,14 @@
 import { allTrashTypes } from "../logic/garbageUtils";
 import type { TrashType } from "../logic/garbageUtils";
 import { generateUUID } from "../utils/uuid";
-import { saveTrashItem } from "./trashStorage"
-import type { TrashItem } from "./trashTypes";
+import { saveTrashItem } from "../logic/trashStorage";
+import type { TrashItem } from "../config/trashTypes";
 
 function polulateTrashTypeSelect() {
   const select = document.getElementById("trash-type") as HTMLSelectElement;
   const defaultOption = document.createElement("option");
   defaultOption.value = "";
-  defaultOption.textContent = "-- ゴミの種類を選択 --"
+  defaultOption.textContent = "-- ゴミの種類を選択 --";
   defaultOption.disabled = true;
   defaultOption.selected = true;
   select.appendChild(defaultOption);
@@ -21,14 +21,12 @@ function polulateTrashTypeSelect() {
   });
 }
 
-
 export function setUpTrashUi() {
   polulateTrashTypeSelect();
   const form = document.getElementById("add-trash-form") as HTMLFormElement;
   const typeSelect = document.getElementById("trash-type") as HTMLSelectElement;
   const nameInput = document.getElementById("trash-name") as HTMLInputElement;
   const noteInput = document.getElementById("trash-note") as HTMLInputElement;
-
 
   form?.addEventListener("submit", (e) => {
     e.preventDefault();

@@ -24,10 +24,12 @@
         <div id="calendar-view" class="view" style="display: none;">
           <h2>ゴミ出しカレンダー</h2>
           <div id="calendar-grid" class="calendar-grid"></div>
+          <div id="calendar-detail" class="calendar-detail-panel"></div>
         </div>
         <div id="wiki-view" class="view" style="display: none;">
           <h2>ゴミ出しWiki</h2>
-          <p>Wiki内容を表示（仮）</p>
+          <input id="wiki-search-input" placeholder="ゴミの名前を入力"/>
+          <div id="wiki-search-results"></div>
         </div>
         <div id="add-trash-view" class="view form-container" style="display: none;">
 
@@ -58,6 +60,7 @@
         <div id="trash-history-view" class="view" style="display: none;"></div>
       </main>
     </div>
+
 
 
     <script type="module" src="/src/main.ts"></script>

@@ -1,4 +1,4 @@
-import type { TrashItem } from "./trashTypes";
+import type { TrashItem } from "../config/trashTypes";
 
 const STORAGE_KEY = "trashItems";
 
