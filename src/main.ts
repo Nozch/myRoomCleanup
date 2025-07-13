@@ -13,22 +13,33 @@ import { allTrashTypes, getNextDisposalDate } from "./logic/garbageUtils";
 import { renderCalendarDetail } from "./ui/calaendarDetail.ts";
 
 document.addEventListener("DOMContentLoaded", () => {
+  setupSidebarListeners();
+  setUpTrashUi();
   setupWikiSearch();
 });
 
+
+const viewInitStatus = new Set<string>();
+
 function showView(viewId: string) {
+
   const views = document.querySelectorAll(".view");
   views.forEach((view) => {
-    if ((view as HTMLElement).id === viewId) {
-      (view as HTMLElement).style.display = "block";
-    } else {
-      (view as HTMLElement).style.display = "none";
-    }
+    (view as HTMLElement).style.display = "none";
   });
 
+  const el = document.getElementById(viewId);
+  if (el) el.style.display = "block";
+  if (!viewInitStatus.has(viewId)) {
+    if (viewId === "add-trash-view")  {
+      setupInputBlinking();
+      setupSelectBlinking();
+    }
+  }
   // カレンダーが表示されたら初期化
   if (viewId === "calendar-view") {
     renderCalendar();
+    initCalendarDefaultSelection();
   }
 
   if (viewId === "trash-history-view") {
@@ -37,77 +48,74 @@ function showView(viewId: string) {
 }
 
 function setupSidebarListeners() {
-  const calendarBtn = document.querySelector('[data-view="calendar"]');
-  const wikiBtn = document.querySelector('[data-view="wiki"]');
-  const addTrashBtn = document.querySelector('[data-view="add-trash"]');
-  const trashHistoryBtn = document.querySelector('[data-view="trash-history"');
+  const viewkeys = ["calendar", "wiki", "add-trash", "trash-history"] as const 
+  viewkeys.forEach((key) => {
+    const selector = `[data-view="${key}"]`;
+    const el = document.querySelector(selector);
 
-  calendarBtn?.addEventListener("click", () => {
-    showView("calendar-view");
-  });
+    if (!el) {
+      throw new Error(`サイドバーに${selector}が存在しません`);
+    }
 
-  wikiBtn?.addEventListener("click", () => {
-    showView("wiki-view");
-  });
+    el.addEventListener("click", () => {
+      showView(`${key}-view`)
+    })
+  })
+}
+function getRequiredInput(name: string): HTMLInputElement {
+  const el = document.querySelector(`input[name="${name}"]`);
+  if (!el) throw new Error(`Input要素が見つかりません: ${name}`);
+  return el as HTMLInputElement;
+}
 
-  addTrashBtn?.addEventListener("click", () => {
-    showView("add-trash-view");
-  });
-
-  trashHistoryBtn?.addEventListener("click", () => {
-    showView("trash-history-view");
-  });
+function getRequiredSelect(name: string): HTMLSelectElement {
+  const el = document.querySelector(`select[name="${name}"]`);
+  if (!el) throw new Error(`Select要素が見つかりません: ${name}`);
+  return el as HTMLSelectElement;
 }
 
 function setupInputBlinking() {
-  const inputTrashName = document.querySelector<HTMLInputElement>(
-    'input[name="trashName"]'
-  );
-  const labelTrashName = inputTrashName
-    ?.closest("label")
-    ?.querySelector(".field-label");
+  const trashName = getRequiredInput("trashName");
+  const trashNote = getRequiredInput("trashNote");
+  const labelTrashName = trashName.closest("label")?.querySelector(".field-label");
+  const labelTrashNote = trashNote.closest("label")?.querySelector(".field-label");
 
-  inputTrashName?.addEventListener("focus", () => {
-    labelTrashName?.classList.add("blinking");
+  if (!labelTrashName || !labelTrashNote) {
+    throw new Error("input要素に対応するlabel要素が見つかりません.")
+  }
+
+  trashName.addEventListener("focus", () => {
+    labelTrashName.classList.add("blinking");
   });
 
-  inputTrashName?.addEventListener("blur", () => {
-    labelTrashName?.classList.remove("blinking");
+  trashName.addEventListener("blur", () => {
+    labelTrashName.classList.remove("blinking");
   });
 
-  const inputTrashNote = document.querySelector<HTMLInputElement>(
-    'input[name="trashNote"'
-  );
-  const labelTrashNote = inputTrashNote
-    ?.closest("label")
-    ?.querySelector(".field-label");
-
-  inputTrashNote?.addEventListener("focus", () => {
-    labelTrashNote?.classList.add("blinking");
+  trashNote.addEventListener("focus", () => {
+    labelTrashNote.classList.add("blinking");
   });
 
-  inputTrashNote?.addEventListener("blur", () => {
-    labelTrashNote?.classList.remove("blinking");
+  trashNote.addEventListener("blur", () => {
+    labelTrashNote.classList.remove("blinking");
   });
 }
 
 function setupSelectBlinking() {
-  const select = document.querySelector<HTMLSelectElement>(
-    'select[name="trashType"]'
-  );
-  const selectLabel = select?.closest("label")?.querySelector(".field-label");
+  const select = getRequiredSelect("trashType");
 
-  select?.addEventListener("focus", () => {
-    selectLabel?.classList.add("blinking");
+  const label = select?.closest("label")?.querySelector(".field-label");
+
+  if (!label) {
+    throw new Error("select[name='trashType']に対応するlabel要素が見つかりません")
+  }
+  select.addEventListener("focus", () => {
+    label.classList.add("blinking");
   });
-  select?.addEventListener("blur", () => {
-    selectLabel?.classList.remove("blinking");
+  select.addEventListener("blur", () => {
+    label.classList.remove("blinking");
   });
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-  setUpTrashUi();
-});
 
 function initCalendarDefaultSelection() {
   const today = new Date();
@@ -120,7 +128,4 @@ function initCalendarDefaultSelection() {
     }
   }
 }
-setupSidebarListeners();
-setupInputBlinking();
-setupSelectBlinking();
-initCalendarDefaultSelection();
+

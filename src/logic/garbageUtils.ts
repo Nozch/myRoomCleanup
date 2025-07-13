@@ -14,12 +14,11 @@ export function getWeekdayName(date: Date): keyof typeof garbageRules {
 
 export function getGarbageTypesFor(date: Date):  TrashType[] {
   const weekday = getWeekdayName(date);
-  const list = garbageRules[weekday]
 
-  if (!list) {
-    console.warn(`未定義の曜日キー: ${weekday}`)
+  if (!(weekday in garbageRules))  {
+    throw new Error(`不正な曜日キー: ${weekday}`);
   }
-  return [...garbageRules[weekday] ?? []]
+  return [...garbageRules[weekday]];
 }
 
 
